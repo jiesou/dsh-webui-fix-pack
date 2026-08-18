@@ -1,0 +1,21 @@
+{
+  "name": "@jiesou/dsh-webui-fix-session-row-context-menu",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Open a session row's actions menu by right-clicking anywhere on the row (client-only plugin).",
+  "license": "MIT",
+  "exports": {
+    ".": "./index.mjs",
+    "./client": "./lib/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  }
+}
