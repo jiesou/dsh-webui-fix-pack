@@ -1,6 +1,6 @@
 {
   "name": "@jiesou/dsh-webui-fix-session-row-context-menu",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Open a session row's actions menu by right-clicking anywhere on the row (client-only plugin).",
   "license": "MIT",

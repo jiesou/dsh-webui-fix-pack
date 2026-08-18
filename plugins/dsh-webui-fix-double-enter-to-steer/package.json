@@ -1,6 +1,6 @@
 {
   "name": "@jiesou/dsh-webui-fix-double-enter-to-steer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "When queued messages exist, pressing Enter on an empty composer steers them into the running turn (double Enter to steer).",
   "license": "MIT",

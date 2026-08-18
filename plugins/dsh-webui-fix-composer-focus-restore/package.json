@@ -1,6 +1,6 @@
 {
   "name": "@jiesou/dsh-webui-fix-composer-focus-restore",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Restore composer textarea focus after a popupSelect command (e.g. /models) closes; works around the upstream bindComposerFocus wiring gap.",
   "license": "MIT",
