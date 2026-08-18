@@ -17,5 +17,10 @@
     "@jiesou/dsh-webui-fix-mobile-enter-newline": "latest",
     "@jiesou/dsh-webui-fix-mobile-keyboard-blur": "latest",
     "@jiesou/dsh-webui-fix-session-row-context-menu": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiesou/dsh-webui-fix-pack.git",
+    "directory": "bundles/dsh-webui-fix-pack"
   }
 }
