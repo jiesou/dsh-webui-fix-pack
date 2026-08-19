@@ -4,15 +4,24 @@ Fixes small bugs and rough edges in the Web UI.
 
 [简体中文](README.md)
 
-This plugin pack is based on the original dsh webui and patches various small bugs to make the experience much more comfortable.
+Keeping with the **don't reinvent the wheel** principle, this plugin pack optimizes the original dsh webui — fixing PWA behavior, responsiveness, and other rough edges.
 
-The original webui is already decent. To stay compatible with the existing plugin ecosystem, this pack does not build a webui from scratch; instead it patches unreasonable parts of the current webui whenever possible.
+Each fixup is also published as an independent plugin, so you can install or remove them one by one.
 
-The design goal is to keep each plugin's scope as small as possible and the code minimal and clean. Most plugins are pure frontend, client-half only; `pwa` is the one Node-half exception because it patches the served index/manifest (still no external dependencies).
+What I deliberately avoid:
+
+- building a webui from scratch
+- implementing a native "desktop" from zero
+- throwing away the existing plugin ecosystem
+- making an "All in One" monolithic plugin
+
+The design goal is to keep each plugin's scope as small as possible and the code minimal and clean. Most plugins are pure frontend, client-half only.
 
 Because only frontend JS injection is available, some implementations are a bit hacky. It would be much easier if the official project fixed these issues.
 
 ## Install
+
+Consider installing [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) first for a better mobile experience!
 
 ### Install the whole dsh-webui-fix-pack aggregate pack
 
@@ -22,10 +31,10 @@ From npm (prebuilt artifacts, recommended):
 dsh plugin --profile web add @jiesou/dsh-webui-fix-pack
 ```
 
-Or from GitHub:
+Or from GitHub (uses the `main` branch; replace `main` with a tag such as `0.3.1` to pin a release):
 
 ```sh
-dsh plugin --profile web add "github:jiesou/dsh-webui-fix-pack#<ref>&path:/bundles/dsh-webui-fix-pack"
+dsh plugin --profile web add "github:jiesou/dsh-webui-fix-pack#main&path:/bundles/dsh-webui-fix-pack"
 ```
 
 Restart **web** after installation.
@@ -46,9 +55,16 @@ dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
 
 [plugins/dsh-webui-fix-pwa](plugins/dsh-webui-fix-pwa/)
 
-Fullscreen PWA on mobile hides the top status bar and bottom navigation bar; you have to swipe to reveal them, and the background colors are wrong.
+Fullscreen PWA on mobile hides the top status bar and bottom navigation bar; you have to swipe to reveal them:
 
-This plugin switches the manifest to `standalone` and injects light/dark `theme_color`/`background_color` from the design tokens plus static index `theme-color` metas; the official layout plugin keeps owning the runtime color. It also serves a dedicated PWA icon: the original icon on a white circle, so it no longer blends into arbitrary wallpapers.
+https://github.com/user-attachments/assets/433a9dfe-202e-4e25-a784-9bccf6243c2a
+
+Now the PWA is switched to `standalone` instead of `fullscreen`, and the correct colors are injected from the design tokens.
+
+<img height="400" alt="before-pwa-icon" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" alt="after-pwa-icon" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
+<img height="300" alt="pwa screenshot" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
+
+The PWA icon is also generated separately: it no longer blends into a black background.
 
 Note: an already installed PWA's `display` will not change with a manifest update — re-add/reinstall it.
 
@@ -127,6 +143,12 @@ Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
 The title-bar subagent catalog dropdown and the composer context panel both spill outside the screen on mobile.
 
 Now on touch devices they are clamped to the screen width and no longer overflow left or right; the context panel's natural 264px width and content height are also restored instead of being stretched by dsh-mobile's generic dialog rule.
+
+This issue is fixed. Before/after:
+
+<img height="600" alt="before-context" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" alt="after-context" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
+
+<img height="600" alt="before-subagent-fix" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" alt="after-subagent-fix" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
 
 ## Dependency strategy
 

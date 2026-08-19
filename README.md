@@ -4,15 +4,24 @@
 
 [English](README.en.md)
 
-这个 plugin 包基于 dsh 原始的 webui，修补了各种小 bug，能让使用体验舒服很多！
+本着 **不重复造轮子** 的原则，这个 plugin 聚合包是在 dsh 本身的 webui 上做优化，修复 PWA，修复响应式问题等等
 
-dsh 本身的 webui 做的已经还不错了，为了兼容现有的各种插件生态，没有选择自己从头做一个 webui，而是尽可能通过各种方式修补现有 webui 中不合理的地方
+而且，**每个 fixup 都作为独立 plugin 提供** 可以逐个独立安装独立卸载
 
-设计目标是让 plugin 的作用域尽可能的小，代码尽可能少且干净。绝大多数 plugin 是纯前端、纯 client-half 的；`pwa` 因为要改 index/manifest，是唯一一个带 Node half 的例外（仍不声明外部依赖）
+我不希望：
+
+- 自造 webui
+- 从头实现自己的原生“desktop”
+- 丢弃现有的插件生态
+- 做“All in One”一堆功能的一体化 plugin
+
+设计目标是让每个 plugin 的作用域尽可能的小，代码尽可能少且干净。绝大多数 plugin 是纯前端、纯 client-half 的
 
 但因为只能注入前端 JS 之类的，因此有些实现会有点 hacky。毕竟官方来修这些问题会容易很多！
 
 ## 安装
+
+建议先安装 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 获得更好的移动端体验！
 
 ### 安装整个 dsh-webui-fix-pack 聚合包
 
@@ -25,12 +34,12 @@ dsh plugin --profile web add @jiesou/dsh-webui-fix-pack
 或从 GitHub 安装：
 
 ```sh
-dsh plugin --profile web add "github:jiesou/dsh-webui-fix-pack#<ref>&path:/bundles/dsh-webui-fix-pack"
+dsh plugin --profile web add "github:jiesou/dsh-webui-fix-pack#main&path:/bundles/dsh-webui-fix-pack"
 ```
 
-安装后需要 **重启 web** 生效。
+安装后需要 **重启 web** 生效
 
-如需在 pack 中单独禁用某插件，在 profile 的 `cordis.patch.yml` 按 `id` 覆盖即可。
+如需在 pack 中单独禁用某插件，在 profile 的 `cordis.patch.yml` 按 `id` 覆盖即可
 
 ### 单独安装单个插件
 
@@ -46,9 +55,14 @@ dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
 
 [plugins/dsh-webui-fix-pwa](plugins/dsh-webui-fix-pwa/)
 
-手机全屏 PWA 默认全屏展示，会隐藏顶部状态栏和底部导航栏，必须划拉一下才能拉出来
+手机全屏 PWA 默认全屏展示，会隐藏顶部状态栏和底部导航栏，必须划拉一下才能拉出来：
+
+https://github.com/user-attachments/assets/433a9dfe-202e-4e25-a784-9bccf6243c2a
 
 现在把 PWA 改为 `standalone` 而不是 `fullscreen` 模式，并按 design token 注入正确的 color
+
+<img height="400" alt="before-pwa-icon 截图 2026-08-19 12-41-51" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" alt="after-pwa-icon 截图 2026-08-19 13-44-57" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
+<img height="300" alt="截图 2026-08-19 13-34-56" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
 
 PWA 图标也单独生成：避免和黑色背景混在一起
 
@@ -126,11 +140,15 @@ https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 
 lehhair/dsh-mobile 的 CSS 规则会导致标题栏的子代理会话列表、以及输入框里的上下文面板，溢出屏幕
 
-修复了这个问题
+修复了这个问题。before/after:
+
+<img height="600" alt="before-context截图 2026-08-19 19-39-43" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" alt="after-context截图 2026-08-19 19-40-09" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
+
+<img height="600" alt="before-subagent-fix截图 2026-08-19 12-25-17" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" alt="after-subagent-fix截图 2026-08-19 12-26-33" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
 
 ## 依赖策略
 
-聚合包 `package.json` 的 `dependencies` 永远写 `latest`，不做本地路径替换。
+聚合包 `package.json` 的 `dependencies` 永远写 `latest`，不做本地路径替换
 
-本地开发由 web profile 的 `devDependencies` link 覆盖：8 个子插件指向本仓库 `plugins/` 目录，改源码即时生效，且不进入 `dependencies`，`dsh plugin` reconcile 不会把它们加回 bundles。
+本地开发由 web profile 的 `devDependencies` link 覆盖：8 个子插件指向本仓库 `plugins/` 目录，改源码即时生效，且不进入 `dependencies`，`dsh plugin` reconcile 不会把它们加回 bundles
 
