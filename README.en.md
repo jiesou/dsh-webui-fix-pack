@@ -14,33 +14,57 @@ Because only frontend JS injection is available, some implementations are a bit 
 
 ## Install
 
-From GitHub:
+### Install the whole dsh-webui-fix-pack aggregate pack
+
+From npm (prebuilt artifacts, recommended):
+
+```sh
+dsh plugin --profile web add @jiesou/dsh-webui-fix-pack
+```
+
+Or from GitHub:
 
 ```sh
 dsh plugin --profile web add "github:jiesou/dsh-webui-fix-pack#<ref>&path:/bundles/dsh-webui-fix-pack"
 ```
 
-Bundle layers take effect after **restarting web**.
+Restart **web** after installation.
 
-You can install the whole dsh-webui-fix-pack, or install individual plugins. To disable a single plugin inside the pack, override it by `id` in the profile's `cordis.patch.yml`.
+To disable a single plugin inside the pack, override it by `id` in the profile's `cordis.patch.yml`.
+
+### Install a single plugin
+
+All subplugins are published to npm; package names match the directory names under `plugins/`, e.g.:
+
+```sh
+dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
+```
 
 ## Plugins
 
 ### composer-focus-restore
 
-Directory: [plugins/dsh-webui-fix-composer-focus-restore](plugins/dsh-webui-fix-composer-focus-restore/)
+[plugins/dsh-webui-fix-composer-focus-restore](plugins/dsh-webui-fix-composer-focus-restore/)
 
-After choosing a command like `/models`, the popup closes and focus leaves the message box, so you have to click the box again to keep typing. This plugin restores focus to the composer.
+https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
+
+Fixes this issue:
+
+After choosing a command like `/models`, the popup closes and focus leaves the message box, so you have to click the box again to keep typing.
 
 ### session-row-context-menu
 
-Directory: [plugins/dsh-webui-fix-session-row-context-menu](plugins/dsh-webui-fix-session-row-context-menu/)
+[plugins/dsh-webui-fix-session-row-context-menu](plugins/dsh-webui-fix-session-row-context-menu/)
 
-In the session list, opening the actions menu requires precisely aiming at the small "three dots" button and left-clicking. This plugin lets you right-click anywhere on the row to open the menu.
+<img height="150" alt="image" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
+
+In the session list, opening the actions menu requires precisely aiming at the small "three dots" button and left-clicking.
+
+Now you can right-click anywhere on the row to open the menu.
 
 ### double-enter-to-steer
 
-Directory: [plugins/dsh-webui-fix-double-enter-to-steer](plugins/dsh-webui-fix-double-enter-to-steer/)
+[plugins/dsh-webui-fix-double-enter-to-steer](plugins/dsh-webui-fix-double-enter-to-steer/)
 
 When there are queued messages, pressing Enter again writes the queued messages directly into the steering message.
 
@@ -48,21 +72,35 @@ When there are queued messages, pressing Enter again writes the queued messages 
 
 ### hide-session-log
 
-Directory: [plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
+[plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
 
-The "save Session log" button in the top-right corner is rarely used but takes up a lot of screen space, which is especially annoying on mobile. When you really need it you can use the `/export` command instead. This plugin hides the button and reclaims its title bar space.
+<img height="450" alt="image" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
+
+The "save Session log" button in the top-right corner is rarely used but takes up a lot of screen space, which is especially annoying on mobile.
+
+When you really need it you can use the `/export` command instead.
+
+This plugin hides the button and reclaims its title bar space.
 
 ### mobile-enter-newline
 
-Directory: [plugins/dsh-webui-fix-mobile-enter-newline](plugins/dsh-webui-fix-mobile-enter-newline/)
+[plugins/dsh-webui-fix-mobile-enter-newline](plugins/dsh-webui-fix-mobile-enter-newline/)
+
+https://github.com/user-attachments/assets/ee8b3016-3f7d-4e43-bd03-5d808680d642
 
 Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
 
-On mobile soft keyboards, Enter inserts a newline instead of sending a message. Desktop behavior is unchanged.
+The original webui cannot insert a newline from a mobile soft keyboard at all; this extension makes Enter insert a newline on mobile soft keyboards.
+
+Also, while the agent is running, the original webui always turns the send button into an agent stop button, so you could only queue messages by pressing Enter on a desktop keyboard.
+
+Now, after typing a message, the agent stop button becomes a queue message button, so you can tap it to send the queued message.
 
 ### mobile-keyboard-blur
 
-Directory: [plugins/dsh-webui-fix-mobile-keyboard-blur](plugins/dsh-webui-fix-mobile-keyboard-blur/)
+[plugins/dsh-webui-fix-mobile-keyboard-blur](plugins/dsh-webui-fix-mobile-keyboard-blur/)
+
+https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 
 Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
 

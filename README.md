@@ -14,22 +14,39 @@ dsh 本身的 webui 做的已经还不错了，为了兼容现有的各种插件
 
 ## 安装
 
-从 GitHub 安装：
+### 安装整个 dsh-webui-fix-pack 聚合包
+
+从 npm 安装（预构建产物，推荐）：
+
+```sh
+dsh plugin --profile web add @jiesou/dsh-webui-fix-pack
+```
+
+或从 GitHub 安装：
 
 ```sh
 dsh plugin --profile web add "github:jiesou/dsh-webui-fix-pack#<ref>&path:/bundles/dsh-webui-fix-pack"
 ```
 
-bundle 层安装后需要**重启 web** 生效。
+安装后需要 **重启 web** 生效。
 
-你可以安装整个 dsh-webui-fix-pack，也可以单独安装某插件，
 如需在 pack 中单独禁用某插件，在 profile 的 `cordis.patch.yml` 按 `id` 覆盖即可。
+
+### 单独安装单个插件
+
+所有子插件都已发布到 npm，包名对应仓库 `plugins/` 下的目录名，例如：
+
+```sh
+dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
+```
 
 ## Plugins
 
 ### composer-focus-restore
 
-目录：[plugins/dsh-webui-fix-composer-focus-restore](plugins/dsh-webui-fix-composer-focus-restore/)
+[plugins/dsh-webui-fix-composer-focus-restore](plugins/dsh-webui-fix-composer-focus-restore/)
+
+https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
 
 修复这个问题：
 
@@ -37,7 +54,9 @@ bundle 层安装后需要**重启 web** 生效。
 
 ### session-row-context-menu
 
-目录：[plugins/dsh-webui-fix-session-row-context-menu](plugins/dsh-webui-fix-session-row-context-menu/)
+[plugins/dsh-webui-fix-session-row-context-menu](plugins/dsh-webui-fix-session-row-context-menu/)
+
+<img height="150" alt="image" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
 
 会话列表中，必须要鼠标瞄准小小的“三个点”，左键才能打开菜单，很麻烦
 
@@ -45,7 +64,7 @@ bundle 层安装后需要**重启 web** 生效。
 
 ### double-enter-to-steer
 
-目录：[plugins/dsh-webui-fix-double-enter-to-steer](plugins/dsh-webui-fix-double-enter-to-steer/)
+[plugins/dsh-webui-fix-double-enter-to-steer](plugins/dsh-webui-fix-double-enter-to-steer/)
 
 有 queue 消息时，再按一次 Enter 直接把 queue 消息写入 steering 消息
 
@@ -53,7 +72,9 @@ bundle 层安装后需要**重启 web** 生效。
 
 ### hide-session-log
 
-目录：[plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
+[plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
+
+<img height="450" alt="image" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
 
 右上角的 save Session log 按钮很少用到，却占很大的屏幕空间。尤其是在移动设备上很难受
 
@@ -63,15 +84,23 @@ bundle 层安装后需要**重启 web** 生效。
 
 ### mobile-enter-newline
 
-目录：[plugins/dsh-webui-fix-mobile-enter-newline](plugins/dsh-webui-fix-mobile-enter-newline/)
+[plugins/dsh-webui-fix-mobile-enter-newline](plugins/dsh-webui-fix-mobile-enter-newline/)
+
+https://github.com/user-attachments/assets/ee8b3016-3f7d-4e43-bd03-5d808680d642
 
 需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
 
-移动端软键盘下 Enter 改为插入换行而不是发送消息，桌面行为保持不变。
+原来的 webui 在移动端完全无法通过软键盘实现换行，这个扩展让移动端软键盘下 Enter 能够换行
+
+同时，在 agent 运行时，原来的 webui 消息发送按钮始终变成 agent 停止按钮，只能在桌面端按 Enter 来 queue 消息
+
+现在，输入消息后，agent 停止按钮 会变成 queue 消息按钮，可以直接点击按钮来发送
 
 ### mobile-keyboard-blur
 
-目录：[plugins/dsh-webui-fix-mobile-keyboard-blur](plugins/dsh-webui-fix-mobile-keyboard-blur/)
+[plugins/dsh-webui-fix-mobile-keyboard-blur](plugins/dsh-webui-fix-mobile-keyboard-blur/)
+
+https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 
 需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
 
