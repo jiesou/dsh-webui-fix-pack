@@ -1,6 +1,6 @@
 {
   "name": "@jiesou/dsh-webui-fix-mobile-panels-width",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "Keep mobile popovers (subagent catalog and context meter) inside the viewport: clamp to screen width and restore the context meter's natural 264px width and content height.",
   "license": "MIT",
