@@ -8,10 +8,7 @@
  */
 window.__ModuleLoader__.load({
   id: '@jiesou/dsh-webui-fix-double-enter-to-steer',
-  factory: (require) => {
-    const module = { exports: {} }
-    const exports = module.exports
-
+  factory: () => {
     function attach(scope) {
       const sessions = scope.sessions
       const conversation = scope.get('conversation')
@@ -53,14 +50,15 @@ window.__ModuleLoader__.load({
       }
     }
 
-    exports.name = '@jiesou/dsh-webui-fix-double-enter-to-steer'
-    exports.apply = function (ctx) {
-      ctx.inject(['conversation', 'sessions'], function (scope) {
-        scope.effect(function () {
-          return attach(scope)
-        }, '@jiesou/dsh-webui-fix-double-enter-to-steer: steer queued messages on empty Enter')
-      })
+    return {
+      name: '@jiesou/dsh-webui-fix-double-enter-to-steer',
+      apply(ctx) {
+        ctx.inject(['conversation', 'sessions'], function (scope) {
+          scope.effect(function () {
+            return attach(scope)
+          }, '@jiesou/dsh-webui-fix-double-enter-to-steer: steer queued messages on empty Enter')
+        })
+      },
     }
-    return module.exports
   },
 })

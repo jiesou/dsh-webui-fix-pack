@@ -5,14 +5,20 @@
       name: '@jiesou/dsh-webui-fix-composer-focus-restore'
     - id: double-enter-to-steer
       name: '@jiesou/dsh-webui-fix-double-enter-to-steer'
+    - id: hide-like-dislike
+      name: '@jiesou/dsh-webui-fix-hide-like-dislike'
     - id: hide-session-log
       name: '@jiesou/dsh-webui-fix-hide-session-log-btn'
     - id: mobile-enter-newline
       name: '@jiesou/dsh-webui-fix-mobile-enter-newline'
     - id: mobile-keyboard-blur
       name: '@jiesou/dsh-webui-fix-mobile-keyboard-blur'
+    - id: mobile-hide-h-scroll
+      name: '@jiesou/dsh-webui-fix-mobile-hide-h-scroll'
     - id: mobile-panels-width
       name: '@jiesou/dsh-webui-fix-mobile-panels-width'
+    - id: mobile-stats-line
+      name: '@jiesou/dsh-webui-fix-mobile-stats-line'
     - id: pwa
       name: '@jiesou/dsh-webui-fix-pwa'
     - id: session-row-context-menu

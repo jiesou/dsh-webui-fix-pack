@@ -1,9 +1,6 @@
 window.__ModuleLoader__.load({
   id: '@jiesou/dsh-webui-fix-mobile-enter-newline',
-  factory: (require) => {
-    var module = { exports: {} }
-    var exports = module.exports
-
+  factory: () => {
     function isTouchUi() {
       return !!window.matchMedia && window.matchMedia('(pointer: coarse)').matches
     }
@@ -152,14 +149,15 @@ window.__ModuleLoader__.load({
       }
     }
 
-    exports.name = '@jiesou/dsh-webui-fix-mobile-enter-newline'
-    exports.apply = function (ctx) {
-      ctx.inject(['sessions'], function (scope) {
-        scope.effect(function () {
-          return attachSteering(scope)
-        }, '@jiesou/dsh-webui-fix-mobile-enter-newline: sendify running primary button')
-      })
+    return {
+      name: '@jiesou/dsh-webui-fix-mobile-enter-newline',
+      apply(ctx) {
+        ctx.inject(['sessions'], function (scope) {
+          scope.effect(function () {
+            return attachSteering(scope)
+          }, '@jiesou/dsh-webui-fix-mobile-enter-newline: sendify running primary button')
+        })
+      },
     }
-    return module.exports
   },
 })

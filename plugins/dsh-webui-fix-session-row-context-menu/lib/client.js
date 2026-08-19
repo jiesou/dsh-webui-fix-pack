@@ -21,10 +21,7 @@
  */
 window.__ModuleLoader__.load({
   id: '@jiesou/dsh-webui-fix-session-row-context-menu',
-  factory: (require) => {
-    var module = { exports: {} }
-    var exports = module.exports
-
+  factory: () => {
     var SESSION_ROW = '[role="tree"] [role="treeitem"][aria-selected]:not(button)'
     var MENU_BUTTON = 'button[aria-label]'
 
@@ -49,10 +46,11 @@ window.__ModuleLoader__.load({
       }
     }
 
-    exports.name = '@jiesou/dsh-webui-fix-session-row-context-menu'
-    exports.apply = function (ctx) {
-      ctx.effect(attach, '@jiesou/dsh-webui-fix-session-row-context-menu: open row menu on right-click')
+    return {
+      name: '@jiesou/dsh-webui-fix-session-row-context-menu',
+      apply(ctx) {
+        ctx.effect(attach, '@jiesou/dsh-webui-fix-session-row-context-menu: open row menu on right-click')
+      },
     }
-    return module.exports
   },
 })

@@ -1,9 +1,6 @@
 window.__ModuleLoader__.load({
   id: '@jiesou/dsh-webui-fix-hide-session-log-btn',
-  factory: (require) => {
-    var module = { exports: {} }
-    var exports = module.exports
-
+  factory: () => {
     var LABEL = 'session log'
 
     function match(el) {
@@ -50,10 +47,11 @@ window.__ModuleLoader__.load({
       return function () { obs.disconnect() }
     }
 
-    exports.name = '@jiesou/dsh-webui-fix-hide-session-log-btn'
-    exports.apply = function (ctx) {
-      ctx.effect(observe, '@jiesou/dsh-webui-fix-hide-session-log-btn: hide by label + reclaim title space')
+    return {
+      name: '@jiesou/dsh-webui-fix-hide-session-log-btn',
+      apply(ctx) {
+        ctx.effect(observe, '@jiesou/dsh-webui-fix-hide-session-log-btn: hide by label + reclaim title space')
+      },
     }
-    return module.exports
   },
 })

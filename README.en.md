@@ -96,6 +96,14 @@ When there are queued messages, pressing Enter again writes the queued messages 
 
 "Press Enter once to queue, press Enter twice to steer."
 
+### hide-like-dislike
+
+[plugins/dsh-webui-fix-hide-like-dislike](plugins/dsh-webui-fix-hide-like-dislike/)
+
+The "Good response / Bad response" feedback buttons under every agent reply serve no purpose for this user.
+
+This plugin hides them; it is pure CSS apart from injecting one style element.
+
 ### hide-session-log
 
 [plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
@@ -150,8 +158,28 @@ This issue is fixed. Before/after:
 
 <img height="600" alt="before-subagent-fix" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" alt="after-subagent-fix" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
 
+### mobile-hide-h-scroll
+
+[plugins/dsh-webui-fix-mobile-hide-h-scroll](plugins/dsh-webui-fix-mobile-hide-h-scroll/)
+
+Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
+
+On phone WebViews, a horizontal scrollbar is still visible while swiping left/right to open the sidebar.
+
+This plugin hides all scrollbars in dsh-mobile's mobile layout; pure CSS, just one injected style element.
+
+### mobile-stats-line
+
+[plugins/dsh-webui-fix-mobile-stats-line](plugins/dsh-webui-fix-mobile-stats-line/)
+
+Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
+
+On mobile the stats line is truncated with no tooltip, so the full stats are unreachable.
+
+This plugin clamps the stats line to the viewport and shows the full text in a bubble on tap.
+
 ## Dependency strategy
 
 The aggregate pack's `dependencies` always use `latest`; no local path rewriting.
 
-Local development is handled by the web profile's `devDependencies` links: the eight subplugins point at this repo's `plugins/` directory, so source edits take effect immediately. They stay out of `dependencies`, so `dsh plugin` reconcile never re-adds them to bundles.
+Local development is handled by the web profile's `devDependencies` links: all subplugins point at this repo's `plugins/` directory, so source edits take effect immediately. They stay out of `dependencies`, so `dsh plugin` reconcile never re-adds them to bundles.

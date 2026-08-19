@@ -19,6 +19,18 @@
 
 但因为只能注入前端 JS 之类的，因此有些实现会有点 hacky。毕竟官方来修这些问题会容易很多！
 
+---
+
+这是搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 之后，能获得的完美移动端 PWA 体验：
+
+https://github.com/user-attachments/assets/f11f9447-d6be-47ea-a9c6-bd2bb9041936
+
+- 消息换行
+- 消息 steering
+- 子代理面板
+
+都非常优雅
+
 ## 安装
 
 建议先安装 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 获得更好的移动端体验！
@@ -94,6 +106,14 @@ https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
 
 实现“单击回车 queue”，“双击回车 steering”
 
+### hide-like-dislike
+
+[plugins/dsh-webui-fix-hide-like-dislike](plugins/dsh-webui-fix-hide-like-dislike/)
+
+每个 agent 回复下面的“好的回答 / 有问题的回答”两个反馈按钮没有任何作用
+
+这个插件直接隐藏它们；纯 CSS 实现，只注入一个 style 标签
+
 ### hide-session-log
 
 [plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
@@ -146,9 +166,29 @@ lehhair/dsh-mobile 的 CSS 规则会导致标题栏的子代理会话列表、�
 
 <img height="600" alt="before-subagent-fix截图 2026-08-19 12-25-17" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" alt="after-subagent-fix截图 2026-08-19 12-26-33" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
 
+### mobile-hide-h-scroll
+
+[plugins/dsh-webui-fix-mobile-hide-h-scroll](plugins/dsh-webui-fix-mobile-hide-h-scroll/)
+
+需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
+
+在手机 WebView 里左右滑动打开侧边栏时，仍能看到横向滚动条
+
+这个插件在 dsh-mobile 的移动布局下隐藏所有滚动条；纯 CSS，只注入一个 style 标签
+
+### mobile-stats-line
+
+[plugins/dsh-webui-fix-mobile-stats-line](plugins/dsh-webui-fix-mobile-stats-line/)
+
+需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
+
+移动端侧边栏的 stats line 会被截断且没有 tooltip，无法看到完整统计信息
+
+这个插件把 stats line 限制在视口内，并在点击时显示完整内容的浮层
+
 ## 依赖策略
 
 聚合包 `package.json` 的 `dependencies` 永远写 `latest`，不做本地路径替换
 
-本地开发由 web profile 的 `devDependencies` link 覆盖：8 个子插件指向本仓库 `plugins/` 目录，改源码即时生效，且不进入 `dependencies`，`dsh plugin` reconcile 不会把它们加回 bundles
+本地开发由 web profile 的 `devDependencies` link 覆盖：所有子插件指向本仓库 `plugins/` 目录，改源码即时生效，且不进入 `dependencies`，`dsh plugin` reconcile 不会把它们加回 bundles
 
