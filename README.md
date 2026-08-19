@@ -48,15 +48,15 @@ dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
 
 https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
 
-修复这个问题：
-
 `/models` 等命令选择后，popup 框关闭，消息框焦点会跑走的，必须再点一下消息框，才能接着打字
+
+修复了这个问题
 
 ### session-row-context-menu
 
 [plugins/dsh-webui-fix-session-row-context-menu](plugins/dsh-webui-fix-session-row-context-menu/)
 
-<img height="150" alt="image" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
 
 会话列表中，必须要鼠标瞄准小小的“三个点”，左键才能打开菜单，很麻烦
 
@@ -74,7 +74,7 @@ https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
 
 [plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
 
-<img height="450" alt="image" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
+<img height="500" alt="image" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
 
 右上角的 save Session log 按钮很少用到，却占很大的屏幕空间。尤其是在移动设备上很难受
 
@@ -86,7 +86,7 @@ https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
 
 [plugins/dsh-webui-fix-mobile-enter-newline](plugins/dsh-webui-fix-mobile-enter-newline/)
 
-https://github.com/user-attachments/assets/ee8b3016-3f7d-4e43-bd03-5d808680d642
+https://github.com/user-attachments/assets/f322ad94-5ba2-4cda-a10e-51902a9331db
 
 需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
 
@@ -100,11 +100,13 @@ https://github.com/user-attachments/assets/ee8b3016-3f7d-4e43-bd03-5d808680d642
 
 [plugins/dsh-webui-fix-mobile-keyboard-blur](plugins/dsh-webui-fix-mobile-keyboard-blur/)
 
-https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
-
 需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
 
-切到侧栏页面时收起聊天输入框焦点，避免 WebView 在键盘收起后又把软键盘弹回来，软键盘鬼畜
+https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
+
+焦点停留在消息框时打开侧边栏切换 session， 会导致 WebView 把键盘收起后又弹回来，界面鬼畜
+
+修复了这个问题
 
 ## 依赖策略
 

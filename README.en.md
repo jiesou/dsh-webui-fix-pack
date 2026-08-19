@@ -48,15 +48,15 @@ dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
 
 https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
 
-Fixes this issue:
-
 After choosing a command like `/models`, the popup closes and focus leaves the message box, so you have to click the box again to keep typing.
+
+This issue is fixed.
 
 ### session-row-context-menu
 
 [plugins/dsh-webui-fix-session-row-context-menu](plugins/dsh-webui-fix-session-row-context-menu/)
 
-<img height="150" alt="image" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
+<img height="200" alt="image" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
 
 In the session list, opening the actions menu requires precisely aiming at the small "three dots" button and left-clicking.
 
@@ -74,7 +74,7 @@ When there are queued messages, pressing Enter again writes the queued messages 
 
 [plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
 
-<img height="450" alt="image" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
+<img height="500" alt="image" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
 
 The "save Session log" button in the top-right corner is rarely used but takes up a lot of screen space, which is especially annoying on mobile.
 
@@ -86,7 +86,7 @@ This plugin hides the button and reclaims its title bar space.
 
 [plugins/dsh-webui-fix-mobile-enter-newline](plugins/dsh-webui-fix-mobile-enter-newline/)
 
-https://github.com/user-attachments/assets/ee8b3016-3f7d-4e43-bd03-5d808680d642
+https://github.com/user-attachments/assets/f322ad94-5ba2-4cda-a10e-51902a9331db
 
 Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
 
@@ -100,11 +100,13 @@ Now, after typing a message, the agent stop button becomes a queue message butto
 
 [plugins/dsh-webui-fix-mobile-keyboard-blur](plugins/dsh-webui-fix-mobile-keyboard-blur/)
 
-https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
-
 Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
 
-Switching to the sidebar page blurs the chat composer, preventing the WebView from popping the soft keyboard back up after it was dismissed.
+https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
+
+When focus stays in the message box and you open the sidebar to switch sessions, the WebView pops the keyboard back up after dismissing it, making the UI janky.
+
+This issue is fixed.
 
 ## Dependency strategy
 
