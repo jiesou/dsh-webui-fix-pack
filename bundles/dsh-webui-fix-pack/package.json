@@ -16,6 +16,8 @@
     "@jiesou/dsh-webui-fix-hide-session-log-btn": "latest",
     "@jiesou/dsh-webui-fix-mobile-enter-newline": "latest",
     "@jiesou/dsh-webui-fix-mobile-keyboard-blur": "latest",
+    "@jiesou/dsh-webui-fix-mobile-panels-width": "latest",
+    "@jiesou/dsh-webui-fix-pwa": "latest",
     "@jiesou/dsh-webui-fix-session-row-context-menu": "latest"
   },
   "repository": {

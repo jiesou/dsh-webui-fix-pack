@@ -8,7 +8,7 @@
 
 dsh 本身的 webui 做的已经还不错了，为了兼容现有的各种插件生态，没有选择自己从头做一个 webui，而是尽可能通过各种方式修补现有 webui 中不合理的地方
 
-设计目标是让 plugin 的作用域尽可能的小，代码尽可能少且干净。plugin 也都是纯前端，纯 client-half 的，不涉及 node-half 和外部依赖
+设计目标是让 plugin 的作用域尽可能的小，代码尽可能少且干净。绝大多数 plugin 是纯前端、纯 client-half 的；`pwa` 因为要改 index/manifest，是唯一一个带 Node half 的例外（仍不声明外部依赖）
 
 但因为只能注入前端 JS 之类的，因此有些实现会有点 hacky。毕竟官方来修这些问题会容易很多！
 
@@ -41,6 +41,16 @@ dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
 ```
 
 ## Plugins
+
+### pwa
+
+[plugins/dsh-webui-fix-pwa](plugins/dsh-webui-fix-pwa/)
+
+手机全屏 PWA 默认全屏展示，会隐藏顶部状态栏和底部导航栏，必须划拉一下才能拉出来
+
+现在把 PWA 改为 `standalone` 而不是 `fullscreen` 模式，并按 design token 注入正确的 color
+
+PWA 图标也单独生成：避免和黑色背景混在一起
 
 ### composer-focus-restore
 
@@ -108,9 +118,19 @@ https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 
 修复了这个问题
 
+### mobile-panels-width
+
+[plugins/dsh-webui-fix-mobile-panels-width](plugins/dsh-webui-fix-mobile-panels-width/)
+
+需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
+
+lehhair/dsh-mobile 的 CSS 规则会导致标题栏的子代理会话列表、以及输入框里的上下文面板，溢出屏幕
+
+修复了这个问题
+
 ## 依赖策略
 
 聚合包 `package.json` 的 `dependencies` 永远写 `latest`，不做本地路径替换。
 
-本地开发由 web profile 的 `devDependencies` link 覆盖：6 个子插件指向本仓库 `plugins/` 目录，改源码即时生效，且不进入 `dependencies`，`dsh plugin` reconcile 不会把它们加回 bundles。
+本地开发由 web profile 的 `devDependencies` link 覆盖：8 个子插件指向本仓库 `plugins/` 目录，改源码即时生效，且不进入 `dependencies`，`dsh plugin` reconcile 不会把它们加回 bundles。
 

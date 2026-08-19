@@ -4,8 +4,16 @@
  * plugin makes right-clicking anywhere on a session row open that same menu.
  *
  * It works by replaying a click on the row's own ellipsis button, so the
- * menu state stays owned by the workspace React component. Class names come
- * from @deepseek-ai/dsh-client-ui-workspace's Rows.module.css bundle.
+ * menu state stays owned by the workspace React component. It deliberately
+ * avoids CSS-module class names (they are hashed and change across builds)
+ * and targets the stable ARIA structure emitted by
+ * @deepseek-ai/dsh-client-ui-workspace:
+ *
+ *   [role="tree"] [role="treeitem"][aria-selected]:not(button)
+ *
+ * Session rows are non-button treeitems; search results are treeitem buttons
+ * and project rows have no aria-selected, so this selector is specific to
+ * session rows. The ellipsis is the only labelled button inside such a row.
  *
  * https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/master/packages/client/ui-workspace/src/client/rows/Rows.tsx
  *
@@ -17,19 +25,11 @@ window.__ModuleLoader__.load({
     var module = { exports: {} }
     var exports = module.exports
 
-    var SESSION_ROW = '[role="treeitem"][aria-selected]'
-    var MENU_OPEN = 'YDXeBa_menuOpen'
+    var SESSION_ROW = '[role="tree"] [role="treeitem"][aria-selected]:not(button)'
+    var MENU_BUTTON = 'button[aria-label]'
 
     function menuButton(row) {
-      return row.querySelector('button')
-    }
-
-    function closeOpenMenus() {
-      var rows = document.querySelectorAll(SESSION_ROW + '.' + MENU_OPEN)
-      for (var i = 0; i < rows.length; i++) {
-        var btn = menuButton(rows[i])
-        if (btn !== null) btn.click()
-      }
+      return row.querySelector(MENU_BUTTON)
     }
 
     function onContextMenu(e) {
@@ -39,8 +39,6 @@ window.__ModuleLoader__.load({
       var btn = menuButton(row)
       if (btn === null) return
       e.preventDefault()
-      if (row.classList.contains(MENU_OPEN)) return
-      closeOpenMenus()
       btn.click()
     }
 

@@ -11,5 +11,9 @@
       name: '@jiesou/dsh-webui-fix-mobile-enter-newline'
     - id: mobile-keyboard-blur
       name: '@jiesou/dsh-webui-fix-mobile-keyboard-blur'
+    - id: mobile-panels-width
+      name: '@jiesou/dsh-webui-fix-mobile-panels-width'
+    - id: pwa
+      name: '@jiesou/dsh-webui-fix-pwa'
     - id: session-row-context-menu
       name: '@jiesou/dsh-webui-fix-session-row-context-menu'

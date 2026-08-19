@@ -8,7 +8,7 @@ This plugin pack is based on the original dsh webui and patches various small bu
 
 The original webui is already decent. To stay compatible with the existing plugin ecosystem, this pack does not build a webui from scratch; instead it patches unreasonable parts of the current webui whenever possible.
 
-The design goal is to keep each plugin's scope as small as possible and the code minimal and clean. All plugins are pure frontend, client-half only — no node-half and no external dependencies.
+The design goal is to keep each plugin's scope as small as possible and the code minimal and clean. Most plugins are pure frontend, client-half only; `pwa` is the one Node-half exception because it patches the served index/manifest (still no external dependencies).
 
 Because only frontend JS injection is available, some implementations are a bit hacky. It would be much easier if the official project fixed these issues.
 
@@ -41,6 +41,16 @@ dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
 ```
 
 ## Plugins
+
+### pwa
+
+[plugins/dsh-webui-fix-pwa](plugins/dsh-webui-fix-pwa/)
+
+Fullscreen PWA on mobile hides the top status bar and bottom navigation bar; you have to swipe to reveal them, and the background colors are wrong.
+
+This plugin switches the manifest to `standalone` and injects light/dark `theme_color`/`background_color` from the design tokens plus static index `theme-color` metas; the official layout plugin keeps owning the runtime color. It also serves a dedicated PWA icon: the original icon on a white circle, so it no longer blends into arbitrary wallpapers.
+
+Note: an already installed PWA's `display` will not change with a manifest update — re-add/reinstall it.
 
 ### composer-focus-restore
 
@@ -108,8 +118,18 @@ When focus stays in the message box and you open the sidebar to switch sessions,
 
 This issue is fixed.
 
+### mobile-panels-width
+
+[plugins/dsh-webui-fix-mobile-panels-width](plugins/dsh-webui-fix-mobile-panels-width/)
+
+Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
+
+The title-bar subagent catalog dropdown and the composer context panel both spill outside the screen on mobile.
+
+Now on touch devices they are clamped to the screen width and no longer overflow left or right; the context panel's natural 264px width and content height are also restored instead of being stretched by dsh-mobile's generic dialog rule.
+
 ## Dependency strategy
 
 The aggregate pack's `dependencies` always use `latest`; no local path rewriting.
 
-Local development is handled by the web profile's `devDependencies` links: the six subplugins point at this repo's `plugins/` directory, so source edits take effect immediately. They stay out of `dependencies`, so `dsh plugin` reconcile never re-adds them to bundles.
+Local development is handled by the web profile's `devDependencies` links: the eight subplugins point at this repo's `plugins/` directory, so source edits take effect immediately. They stay out of `dependencies`, so `dsh plugin` reconcile never re-adds them to bundles.
