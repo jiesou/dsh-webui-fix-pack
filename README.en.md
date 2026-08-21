@@ -61,8 +61,8 @@ https://github.com/user-attachments/assets/433a9dfe-202e-4e25-a784-9bccf6243c2a
 
 Now the PWA is switched to `standalone` instead of `fullscreen`, and the correct colors are injected from the design tokens.
 
-<img height="400" alt="before-pwa-icon" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" alt="after-pwa-icon" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
-<img height="300" alt="pwa screenshot" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
+<img height="400" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
+<img height="300" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
 
 The PWA icon is also generated separately: it no longer blends into a black background.
 
@@ -82,7 +82,7 @@ This issue is fixed.
 
 [plugins/dsh-webui-fix-session-row-context-menu](plugins/dsh-webui-fix-session-row-context-menu/)
 
-<img height="200" alt="image" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
+<img height="200" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
 
 In the session list, opening the actions menu requires precisely aiming at the small "three dots" button and left-clicking.
 
@@ -108,7 +108,7 @@ This plugin hides them; it is pure CSS apart from injecting one style element.
 
 [plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
 
-<img height="500" alt="image" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
+<img height="500" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
 
 The "save Session log" button in the top-right corner is rarely used but takes up a lot of screen space, which is especially annoying on mobile.
 
@@ -154,9 +154,9 @@ Now on touch devices they are clamped to the screen width and no longer overflow
 
 This issue is fixed. Before/after:
 
-<img height="600" alt="before-context" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" alt="after-context" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
+<img height="600" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
 
-<img height="600" alt="before-subagent-fix" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" alt="after-subagent-fix" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
+<img height="600" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
 
 ### mobile-hide-h-scroll
 
@@ -164,9 +164,9 @@ This issue is fixed. Before/after:
 
 Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
 
-On phone WebViews, a horizontal scrollbar is still visible while swiping left/right to open the sidebar.
+A horizontal scrollbar was visible when swiping left/right to open the sidebar in phone WebViews; this plugin now hides it.
 
-This plugin hides all scrollbars in dsh-mobile's mobile layout; pure CSS, just one injected style element.
+<img height="600" src="https://github.com/user-attachments/assets/bb0c963b-8cc8-4a9a-baff-db661a8b2e1c" />
 
 ### mobile-stats-line
 
@@ -174,9 +174,9 @@ This plugin hides all scrollbars in dsh-mobile's mobile layout; pure CSS, just o
 
 Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
 
-On mobile the stats line is truncated with no tooltip, so the full stats are unreachable.
+The bottom stats line is truncated on mobile with no tooltip; now you can tap it to pop up a tooltip with the full info.
 
-This plugin clamps the stats line to the viewport and shows the full text in a bubble on tap.
+<img height="600" src="https://github.com/user-attachments/assets/194204e3-59ca-434f-a558-8044c072ae45" />
 
 ## Dependency strategy
 

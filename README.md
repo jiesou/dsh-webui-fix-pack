@@ -73,8 +73,8 @@ https://github.com/user-attachments/assets/433a9dfe-202e-4e25-a784-9bccf6243c2a
 
 现在把 PWA 改为 `standalone` 而不是 `fullscreen` 模式，并按 design token 注入正确的 color
 
-<img height="400" alt="before-pwa-icon 截图 2026-08-19 12-41-51" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" alt="after-pwa-icon 截图 2026-08-19 13-44-57" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
-<img height="300" alt="截图 2026-08-19 13-34-56" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
+<img height="400" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
+<img height="300" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
 
 PWA 图标也单独生成：避免和黑色背景混在一起
 
@@ -92,7 +92,7 @@ https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
 
 [plugins/dsh-webui-fix-session-row-context-menu](plugins/dsh-webui-fix-session-row-context-menu/)
 
-<img height="200" alt="image" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
+<img height="200" src="https://github.com/user-attachments/assets/b91a7d54-6bca-47f7-bfb9-47a1fefc4833" />
 
 会话列表中，必须要鼠标瞄准小小的“三个点”，左键才能打开菜单，很麻烦
 
@@ -118,7 +118,7 @@ https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
 
 [plugins/dsh-webui-fix-hide-session-log-btn](plugins/dsh-webui-fix-hide-session-log-btn/)
 
-<img height="500" alt="image" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
+<img height="500" src="https://github.com/user-attachments/assets/e0fe81c2-4cb6-4c14-8779-c3fb573514a0" />
 
 右上角的 save Session log 按钮很少用到，却占很大的屏幕空间。尤其是在移动设备上很难受
 
@@ -162,9 +162,9 @@ lehhair/dsh-mobile 的 CSS 规则会导致标题栏的子代理会话列表、�
 
 修复了这个问题。before/after:
 
-<img height="600" alt="before-context截图 2026-08-19 19-39-43" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" alt="after-context截图 2026-08-19 19-40-09" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
+<img height="600" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
 
-<img height="600" alt="before-subagent-fix截图 2026-08-19 12-25-17" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" alt="after-subagent-fix截图 2026-08-19 12-26-33" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
+<img height="600" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
 
 ### mobile-hide-h-scroll
 
@@ -172,9 +172,9 @@ lehhair/dsh-mobile 的 CSS 规则会导致标题栏的子代理会话列表、�
 
 需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
 
-在手机 WebView 里左右滑动打开侧边栏时，仍能看到横向滚动条
+这个 plugin 在手机 WebView 里左右滑动打开侧边栏时，能看到横向滚动条，现在将它隐藏了
 
-这个插件在 dsh-mobile 的移动布局下隐藏所有滚动条；纯 CSS，只注入一个 style 标签
+<img height="600" src="https://github.com/user-attachments/assets/bb0c963b-8cc8-4a9a-baff-db661a8b2e1c" />
 
 ### mobile-stats-line
 
@@ -182,9 +182,9 @@ lehhair/dsh-mobile 的 CSS 规则会导致标题栏的子代理会话列表、�
 
 需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
 
-移动端侧边栏的 stats line 会被截断且没有 tooltip，无法看到完整统计信息
+底部显示统计信息的的 stats line 在移动端会被截断且没有 tooltip，现在可以点它跳出 tooltip 看完整信息了
 
-这个插件把 stats line 限制在视口内，并在点击时显示完整内容的浮层
+<img height="600" src="https://github.com/user-attachments/assets/194204e3-59ca-434f-a558-8044c072ae45" />
 
 ## 依赖策略
 

@@ -1,6 +1,16 @@
 window.__ModuleLoader__.load({
   id: '@jiesou/dsh-webui-fix-mobile-enter-newline',
   factory: () => {
+    const cssTagId = '@jiesou/dsh-webui-fix-mobile-enter-newline/sendify.css'
+    const CSS = '[data-composer-card] button.dsh-sendified>svg:not(.dsh-sendified-icon){display:none}'
+    if (typeof document !== 'undefined' && document.querySelector('style[data-plugin-css="' + cssTagId + '"]') === null) {
+      const tag = document.createElement('style')
+      tag.dataset.plugin = '@jiesou/dsh-webui-fix-mobile-enter-newline'
+      tag.dataset.pluginCss = cssTagId
+      tag.textContent = CSS
+      document.head.appendChild(tag)
+    }
+
     function isTouchUi() {
       return !!window.matchMedia && window.matchMedia('(pointer: coarse)').matches
     }
@@ -27,10 +37,6 @@ window.__ModuleLoader__.load({
       return btn !== null && btn.querySelector('svg path') !== null
     }
 
-    function isStop(btn) {
-      return btn !== null && btn.querySelector('svg rect') !== null
-    }
-
     function isStopMode(scope) {
       var sessions = scope.sessions
       var id = sessions.list.getSnapshot().current
@@ -55,29 +61,55 @@ window.__ModuleLoader__.load({
         bubbles: true,
         cancelable: true
       }))
+      if (resyncSoon !== null) resyncSoon()
     }
 
-    function syncTooltip(button, label) {
+    var templateHtml = null
+    var templateLabel = null
+    var resyncSoon = null
+
+    function sendifiedIcon() {
+      var holder = document.createElement('div')
+      holder.innerHTML = templateHtml
+      var icon = holder.firstElementChild
+      if (icon !== null) icon.classList.add('dsh-sendified-icon')
+      return icon
+    }
+
+    function syncLabel(button) {
+      if (templateLabel === null) return
+      if (button.getAttribute('aria-label') !== templateLabel) {
+        button.setAttribute('aria-label', templateLabel)
+      }
       var tip = button.nextElementSibling
-      if (tip !== null && tip.getAttribute('role') === 'tooltip' && label !== null) {
-        tip.textContent = label
+      if (tip !== null && tip.getAttribute('role') === 'tooltip' && tip.textContent !== templateLabel) {
+        tip.textContent = templateLabel
       }
     }
 
-    function clearModified(button, restoreVisual) {
-      var original = button.__dshOriginal
-      if (original === undefined) return
-      button.removeEventListener('click', onSendifiedClick, true)
-      if (restoreVisual) {
-        button.innerHTML = original.html
-        if (original.label !== null) button.setAttribute('aria-label', original.label)
+    function sendify(button) {
+      if (button.__dshSendified !== true) {
+        button.__dshSendified = true
+        button.classList.add('dsh-sendified')
+        button.addEventListener('click', onSendifiedClick, true)
       }
-      syncTooltip(button, original.label)
-      delete button.__dshOriginal
+      if (button.querySelector('.dsh-sendified-icon') === null) {
+        var icon = sendifiedIcon()
+        if (icon !== null) button.appendChild(icon)
+      }
+      syncLabel(button)
+    }
+
+    function clearSendified(button) {
+      if (button === null || button.__dshSendified !== true) return
+      button.removeEventListener('click', onSendifiedClick, true)
+      button.classList.remove('dsh-sendified')
+      var icon = button.querySelector('.dsh-sendified-icon')
+      if (icon !== null) icon.remove()
+      delete button.__dshSendified
     }
 
     function attachSteering(scope) {
-      var template = { html: null, label: null }
       var scheduled = false
 
       function syncSoon() {
@@ -92,37 +124,22 @@ window.__ModuleLoader__.load({
       function syncCard(card) {
         var button = primaryOf(card)
         if (button === null) return
-        if (isSend(button) && template.html === null) {
-          template.html = button.innerHTML
-          template.label = button.getAttribute('aria-label')
+        if (templateHtml === null && isSend(button)) {
+          templateHtml = button.innerHTML
+          templateLabel = button.getAttribute('aria-label')
         }
         var textarea = textareaOf(card)
         var hasText = textarea !== null && textarea.value.trim() !== ''
-        var stopMode = isStopMode(scope)
-        var modified = button.__dshOriginal !== undefined
-        if (stopMode && hasText && template.html !== null) {
-          if (!modified) {
-            button.__dshOriginal = { html: button.innerHTML, label: button.getAttribute('aria-label') }
-            button.addEventListener('click', onSendifiedClick, true)
-          }
-          if (!isSend(button)) {
-            button.innerHTML = template.html
-            if (template.label !== null) button.setAttribute('aria-label', template.label)
-          }
-          syncTooltip(button, template.label)
-        } else if (modified) {
-          clearModified(button, stopMode && !isStop(button))
-        }
+        if (isStopMode(scope) && hasText && templateHtml !== null) sendify(button)
+        else clearSendified(button)
       }
 
       function syncAll() {
         cards().forEach(syncCard)
       }
 
-      function restore(card) {
-        var button = primaryOf(card)
-        if (button === null || button.__dshOriginal === undefined) return
-        clearModified(button, true)
+      resyncSoon = function () {
+        requestAnimationFrame(syncAll)
       }
 
       var onKeyDown = function (e) {
@@ -142,10 +159,11 @@ window.__ModuleLoader__.load({
       syncAll()
 
       return function () {
+        resyncSoon = null
         document.removeEventListener('keydown', onKeyDown, true)
         document.removeEventListener('input', syncSoon, true)
         observer.disconnect()
-        cards().forEach(restore)
+        cards().forEach(function (card) { clearSendified(primaryOf(card)) })
       }
     }
 
