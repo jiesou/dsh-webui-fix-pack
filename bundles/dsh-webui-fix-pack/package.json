@@ -1,6 +1,6 @@
 {
   "name": "@jiesou/dsh-webui-fix-pack",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "main": "./package.json",
   "publishConfig": {
     "access": "public"
