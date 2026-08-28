@@ -1,10 +1,4 @@
-// Node half: patches the served PWA surface.
-// - taps the index to inject light/dark media theme-color metas
-// - intercepts /manifest.webmanifest and serves display=standalone plus
-//   theme_color/background_color resolved from the theme design tokens.
-// - serves a dedicated PWA icon: the original favicon on a white circle.
-// The client half only removes the static metas after boot; dsh-client-ui-layout
-// already owns the runtime theme-color meta from the computed body background.
+// Node half: inject theme-color metas, patch manifest to standalone, serve PWA icon.
 import { createRequire } from 'node:module'
 import { readFileSync } from 'node:fs'
 import { DEFAULT_PREFERENCE, THEME_PREFERENCE_FIELD, THEME_SETTINGS_NAMESPACE } from '@deepseek-ai/dsh-client-ui-theme'
@@ -54,28 +48,11 @@ function pwaIconSvg() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${ICON_SIZE}" height="${ICON_SIZE}" viewBox="0 0 ${ICON_SIZE} ${ICON_SIZE}"><circle cx="256" cy="256" r="256" fill="#ffffff"/><g transform="translate(${ICON_PAD_X} ${ICON_PAD_Y}) scale(${ICON_SCALE})">${path[0]}</g></svg>`
 }
 
-function themeColorMetas(light, dark) {
-  return [
-    `<meta name="theme-color" ${META_ATTR} media="(prefers-color-scheme: light)" content="${light}" />`,
-    `<meta name="theme-color" ${META_ATTR} media="(prefers-color-scheme: dark)" content="${dark}" />`,
-  ].join('')
-}
-
 function injectThemeColorMetas(html, light, dark) {
-  const metas = themeColorMetas(light, dark)
+  const metas = `<meta name="theme-color" ${META_ATTR} media="(prefers-color-scheme: light)" content="${light}" /><meta name="theme-color" ${META_ATTR} media="(prefers-color-scheme: dark)" content="${dark}" />`
   const at = html.indexOf('</head>')
   if (at === -1) return `${html}${metas}`
   return `${html.slice(0, at)}${metas}${html.slice(at)}`
-}
-
-function readPreference(ctx) {
-  return ctx.get('settings')?.get?.(THEME_SETTINGS_NAMESPACE)?.[THEME_PREFERENCE_FIELD] ?? DEFAULT_PREFERENCE
-}
-
-function manifestColors(preference, tokens) {
-  return preference === 'dark'
-    ? { theme_color: tokens.dark, background_color: tokens.dark }
-    : { theme_color: tokens.light, background_color: tokens.light }
 }
 
 function serveManifest(ctx, tokens, base, icon) {
@@ -85,11 +62,29 @@ function serveManifest(ctx, tokens, base, icon) {
       res.end()
       return
     }
-    const colors = manifestColors(readPreference(ctx), tokens)
+    const preference = ctx.get('settings')?.get?.(THEME_SETTINGS_NAMESPACE)?.[THEME_PREFERENCE_FIELD] ?? DEFAULT_PREFERENCE
+    const color = preference === 'dark' ? tokens.dark : tokens.light
     const icons = icon === null
       ? base.icons
       : [{ src: ICON_PATH, sizes: 'any', type: 'image/svg+xml', purpose: 'any' }]
-    const body = JSON.stringify({ ...base, display: 'standalone', ...colors, icons }, null, 2)
+    // Only embed the token for authenticated requests. `connection` exists only
+    // on dsh >= 0.1.2-alpha.1; it is read defensively (not injected) so that
+    // 0.1.1-rc2, where the service is absent, still loads and serves the plain
+    // start_url.
+    let startUrl = base.start_url
+    const conn = connectionOf(ctx)
+    if (conn && conn.requestRejection?.(req) === undefined) {
+      const token = new URL(conn.authenticatedUrl('http://localhost')).searchParams.get('token')
+      if (typeof token === 'string') startUrl = `/?token=${token}`
+    }
+    const body = JSON.stringify({
+      ...base,
+      display: 'standalone',
+      theme_color: color,
+      background_color: color,
+      start_url: startUrl,
+      icons,
+    }, null, 2)
     res.writeHead(200, {
       'content-type': 'application/manifest+json; charset=utf-8',
       'cache-control': 'no-cache',
@@ -113,8 +108,23 @@ function serveIcon(svg) {
   }
 }
 
+// `connection` (and its one-time launch token) only exists on dsh >= 0.1.2-alpha.1.
+// It is intentionally not injected: a required inject would stop this plugin from
+// loading on 0.1.1-rc2, where the service is absent. Read it defensively so an
+// absent service degrades to "no token" instead of throwing.
+function connectionOf(ctx) {
+  try { return ctx.connection } catch { return null }
+}
+
 export const name = '@jiesou/dsh-webui-fix-pwa'
 export const inject = ['settings', 'webServer']
+
+// DSH only mints the session cookie via the one-time token URL (`GET /?token=…`),
+// so the token gate stays. A desktop PWA launching straight at that URL loses
+// the cookie and hangs, so we only embed the token in `start_url` for
+// authenticated requests; unauthenticated LAN clients fetching the manifest
+// see no token. On 0.1.1-rc2 `connection` is absent, so the plain `start_url`
+// is served and the PWA relies on the older auth flow.
 
 export function apply(ctx) {
   const tokens = designTokens()
