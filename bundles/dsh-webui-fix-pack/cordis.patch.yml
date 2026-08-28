@@ -15,8 +15,8 @@
       name: '@jiesou/dsh-webui-fix-mobile-keyboard-blur'
     - id: mobile-hide-h-scroll
       name: '@jiesou/dsh-webui-fix-mobile-hide-h-scroll'
-    - id: mobile-panels-width
-      name: '@jiesou/dsh-webui-fix-mobile-panels-width'
+    - id: subagent-panel
+      name: '@jiesou/dsh-webui-fix-subagent-panel'
     - id: mobile-stats-line
       name: '@jiesou/dsh-webui-fix-mobile-stats-line'
     - id: pwa

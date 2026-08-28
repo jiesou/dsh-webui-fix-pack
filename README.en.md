@@ -88,6 +88,24 @@ In the session list, opening the actions menu requires precisely aiming at the s
 
 Now you can right-click anywhere on the row to open the menu.
 
+### subagent-panel
+
+[plugins/dsh-webui-fix-subagent-panel](plugins/dsh-webui-fix-subagent-panel/)
+
+The "N subagents" dropdown in the header has no click handler at all: it only opens after hovering for 150ms, and the portaled menu sits 5px below the trigger behind a 120ms hover-close timer, so clicks often do nothing or the menu closes before you reach it.
+
+Now clicking toggles the catalog (hover-to-open keeps working); clicking an ancestor switcher in the breadcrumbs still navigates as before.
+
+Also, on narrow / touch layouts the title-bar subagent session tree opens at `left: 0` and spills off-screen; this plugin clamps it to the viewport on coarse-pointer (touch) UIs (use with [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile)).
+
+Before/after:
+
+<img height="600" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
+
+<img height="600" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
+
+> Upstream status: the context-panel half has been fixed upstream by [lehhair/dsh-mobile@22bcdbf](https://github.com/lehhair/dsh-mobile/commit/22bcdbfc37798e6efd7660194a6a846b8eb18204) — the generic `[role='dialog']` settings-dialog rule is now scoped to `:has(> nav)`, and the context panel keeps its own `min(264px, calc(100vw - 32px))` geometry. With dsh-mobile at or after that commit, only the title-bar subagent catalog half of this plugin still does anything; that dropdown is a core ui-subagent fixed-position panel (`.menu { position: fixed; width: 336px }`, no viewport clamping), inherent to deepseek-harness rather than caused by dsh-mobile.
+
 ### double-enter-to-steer
 
 [plugins/dsh-webui-fix-double-enter-to-steer](plugins/dsh-webui-fix-double-enter-to-steer/)
@@ -141,22 +159,6 @@ https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 When focus stays in the message box and you open the sidebar to switch sessions, the WebView pops the keyboard back up after dismissing it, making the UI janky.
 
 This issue is fixed.
-
-### mobile-panels-width
-
-[plugins/dsh-webui-fix-mobile-panels-width](plugins/dsh-webui-fix-mobile-panels-width/)
-
-Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
-
-The title-bar subagent catalog dropdown and the composer context panel both spill outside the screen on mobile.
-
-Now on touch devices they are clamped to the screen width and no longer overflow left or right; the context panel's natural 264px width and content height are also restored instead of being stretched by dsh-mobile's generic dialog rule.
-
-This issue is fixed. Before/after:
-
-<img height="600" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
-
-<img height="600" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
 
 ### mobile-hide-h-scroll
 

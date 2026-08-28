@@ -1,6 +1,6 @@
 {
   "name": "@jiesou/dsh-webui-fix-pack",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "main": "./package.json",
   "publishConfig": {
     "access": "public"
@@ -18,7 +18,7 @@
     "@jiesou/dsh-webui-fix-mobile-enter-newline": "latest",
     "@jiesou/dsh-webui-fix-mobile-keyboard-blur": "latest",
     "@jiesou/dsh-webui-fix-mobile-hide-h-scroll": "latest",
-    "@jiesou/dsh-webui-fix-mobile-panels-width": "latest",
+    "@jiesou/dsh-webui-fix-subagent-panel": "latest",
     "@jiesou/dsh-webui-fix-mobile-stats-line": "latest",
     "@jiesou/dsh-webui-fix-pwa": "latest",
     "@jiesou/dsh-webui-fix-session-row-context-menu": "latest"

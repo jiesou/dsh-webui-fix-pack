@@ -98,6 +98,24 @@ https://github.com/user-attachments/assets/9d39a220-7933-4902-8f64-38c9ec7978b4
 
 现在可以在任意位置右键打开
 
+### subagent-panel
+
+[plugins/dsh-webui-fix-subagent-panel](plugins/dsh-webui-fix-subagent-panel/)
+
+顶部“N 个子代理”下拉框没有绑定点击事件，只能靠 hover 停留 150ms 展开；而菜单和按钮之间留了 5px 缝隙，hover 移开 120ms 就自动收起，导致经常“点了没反应”、“还没点到就缩回去”
+
+现在点击即可展开/收起（hover 展开保持不变）；面包屑里的祖先切换器点击跳转语义不受影响
+
+同时，在窄屏 / touch 布局下标题栏子代理会话列表会从 `left: 0` 溢出屏幕，本插件在 coarse-pointer UI 上把它钳制到视口内（搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用）
+
+before/after:
+
+<img height="600" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
+
+<img height="600" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
+
+> 上游进展：上下文面板那一半已被 [lehhair/dsh-mobile@22bcdbf](https://github.com/lehhair/dsh-mobile/commit/22bcdbfc37798e6efd7660194a6a846b8eb18204) 修复——通用 `[role='dialog']` 设置弹窗规则收窄为 `:has(> nav)`，并给 context 面板单独保留了 `min(264px, calc(100vw - 32px))` 几何。搭配该提交之后的 dsh-mobile 时，本插件只剩标题栏子代理会话列表这一半还在生效；那个弹层是核心 ui-subagent 的固定定位（`.menu { position: fixed; width: 336px }`，无视口钳制），属 deepseek-harness 固有问题，不是 dsh-mobile 引起的。
+
 ### double-enter-to-steer
 
 [plugins/dsh-webui-fix-double-enter-to-steer](plugins/dsh-webui-fix-double-enter-to-steer/)
@@ -151,20 +169,6 @@ https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 焦点停留在消息框时打开侧边栏切换 session， 会导致 WebView 把键盘收起后又弹回来，界面鬼畜
 
 修复了这个问题
-
-### mobile-panels-width
-
-[plugins/dsh-webui-fix-mobile-panels-width](plugins/dsh-webui-fix-mobile-panels-width/)
-
-需要搭配 [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile) 使用
-
-lehhair/dsh-mobile 的 CSS 规则会导致标题栏的子代理会话列表、以及输入框里的上下文面板，溢出屏幕
-
-修复了这个问题。before/after:
-
-<img height="600" src="https://github.com/user-attachments/assets/635d56ac-5a92-4174-9927-f556413f24f9" /><img height="600" src="https://github.com/user-attachments/assets/50e75b9a-5115-4da7-b353-c9f40c85f586" />
-
-<img height="600" src="https://github.com/user-attachments/assets/6e4448f2-12e1-493b-a575-8428b5b4a530" /><img height="600" src="https://github.com/user-attachments/assets/6b86fb2c-4086-42ce-a6df-d17644c09180" />
 
 ### mobile-hide-h-scroll
 
