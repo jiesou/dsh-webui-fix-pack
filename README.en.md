@@ -178,6 +178,8 @@ Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
 
 The bottom stats line is truncated on mobile with no tooltip; now you can tap it to pop up a tooltip with the full info.
 
+Upstream wires the tooltip to hover (after a 500ms delay) and focus only, and the stats line is a non-focusable div -- so touch has to rely on flaky emulated mouse events. On touch devices it now shows instantly per tap and dismisses on a second tap; desktop hover is unchanged.
+
 <img height="600" src="https://github.com/user-attachments/assets/194204e3-59ca-434f-a558-8044c072ae45" />
 
 ## Dependency strategy

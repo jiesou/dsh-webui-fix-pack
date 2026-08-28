@@ -188,6 +188,8 @@ https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 
 底部显示统计信息的的 stats line 在移动端会被截断且没有 tooltip，现在可以点它跳出 tooltip 看完整信息了
 
+上游 tooltip 只挂了 hover（还要等 500ms）和 focus 两条触发路径，而 stats line 是个不可聚焦的 div，触摸下只能靠时灵时不灵的模拟鼠标事件。现在触摸设备上点击即显、再点即收，桌面 hover 行为不变
+
 <img height="600" src="https://github.com/user-attachments/assets/194204e3-59ca-434f-a558-8044c072ae45" />
 
 ## 依赖策略
