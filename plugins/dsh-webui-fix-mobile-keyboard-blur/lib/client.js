@@ -1,6 +1,6 @@
 /**
  * WORKAROUND for the dsh-mobile pager + Android WebView IME quirk:
- * the composer textarea keeps DOM focus after the user dismisses the soft
+ * the composer editable keeps DOM focus after the user dismisses the soft
  * keyboard (Android keeps focus when the back button hides the IME). When
  * the pager then scrolls/snaps to the sidebar page, the WebView re-opens
  * the keyboard ("pops up for a moment").
@@ -13,13 +13,17 @@
 window.__ModuleLoader__.load({
   id: '@jiesou/dsh-webui-fix-mobile-keyboard-blur',
   factory: () => {
-    const EDITABLE_SELECTOR = 'textarea, input, [contenteditable="true"]'
+    function isEditable(el) {
+      return el instanceof HTMLTextAreaElement ||
+        el instanceof HTMLInputElement ||
+        el.isContentEditable
+    }
 
     function blurChatEditable() {
       const html = document.documentElement
       if (html.getAttribute('data-dshm-page') !== 'sidebar') return
       const active = document.activeElement
-      if (!(active instanceof HTMLElement) || !active.matches(EDITABLE_SELECTOR)) return
+      if (!(active instanceof HTMLElement) || !isEditable(active)) return
       const frame = document.querySelector('div[data-sidebar-collapsed], div[data-details-collapsed]')
       const chatCard = frame?.children[1]
       if (!(chatCard instanceof Element) || !chatCard.contains(active)) return
