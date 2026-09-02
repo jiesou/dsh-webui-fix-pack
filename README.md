@@ -192,6 +192,8 @@ https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 
 <img height="600" src="https://github.com/user-attachments/assets/194204e3-59ca-434f-a558-8044c072ae45" />
 
+> 此功能已由 dsh-mobile 在 2026-09-01 的 commit [`5c6a90e`](https://github.com/lehhair/dsh-mobile/commit/5c6a90e0878fb7bf827269196279d2ea87b40efb)（随 v0.1.4 发布）以另一种方式实现：stats line 被放进一个 `mask-image` 钳制的显示窗口里，左右滑动即可看到完整读数，触摸下不再需要点击弹 tooltip。现在仅适用于尚未包含该实现的旧版本
+
 ## 依赖策略
 
 聚合包 `package.json` 的 `dependencies` 永远写 `latest`，不做本地路径替换

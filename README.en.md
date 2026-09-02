@@ -182,6 +182,8 @@ Upstream wires the tooltip to hover (after a 500ms delay) and focus only, and th
 
 <img height="600" src="https://github.com/user-attachments/assets/194204e3-59ca-434f-a558-8044c072ae45" />
 
+> This functionality was implemented upstream in dsh-mobile by the 2026-09-01 commit [`5c6a90e`](https://github.com/lehhair/dsh-mobile/commit/5c6a90e0878fb7bf827269196279d2ea87b40efb) (shipped in v0.1.4), in a different way: the stats line now scrolls inside a `mask-image`-clipped display window, so a swipe reveals the full readings and the tap-to-tooltip is no longer needed. It is now only needed for older versions that do not include the implementation.
+
 ## Dependency strategy
 
 The aggregate pack's `dependencies` always use `latest`; no local path rewriting.
