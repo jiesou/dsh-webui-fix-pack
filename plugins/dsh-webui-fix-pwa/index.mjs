@@ -48,11 +48,41 @@ function pwaIconSvg() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${ICON_SIZE}" height="${ICON_SIZE}" viewBox="0 0 ${ICON_SIZE} ${ICON_SIZE}"><circle cx="256" cy="256" r="256" fill="#ffffff"/><g transform="translate(${ICON_PAD_X} ${ICON_PAD_Y}) scale(${ICON_SCALE})">${path[0]}</g></svg>`
 }
 
-function injectThemeColorMetas(html, light, dark) {
-  const metas = `<meta name="theme-color" ${META_ATTR} media="(prefers-color-scheme: light)" content="${light}" /><meta name="theme-color" ${META_ATTR} media="(prefers-color-scheme: dark)" content="${dark}" />`
-  const at = html.indexOf('</head>')
-  if (at === -1) return `${html}${metas}`
-  return `${html.slice(0, at)}${metas}${html.slice(at)}`
+function injectThemeColorMetas(html, light, dark, preference) {
+  const apple = '<meta name="mobile-web-app-capable" content="yes" /><meta name="apple-mobile-web-app-capable" content="yes" /><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />'
+  let metas = ''
+  if (preference === 'light') {
+    metas = `<meta name="theme-color" ${META_ATTR} content="${light}" />`
+  } else if (preference === 'dark') {
+    metas = `<meta name="theme-color" ${META_ATTR} content="${dark}" />`
+  } else {
+    metas = `<meta name="theme-color" ${META_ATTR} media="(prefers-color-scheme: light)" content="${light}" /><meta name="theme-color" ${META_ATTR} media="(prefers-color-scheme: dark)" content="${dark}" />`
+  }
+  const style = preference === 'light'
+    ? `<style ${META_ATTR}>html{background:${light};color-scheme:light}</style>`
+    : preference === 'dark'
+      ? `<style ${META_ATTR}>html{background:${dark};color-scheme:dark}</style>`
+      : `<style ${META_ATTR}>html{background:${light}}@media (prefers-color-scheme: dark){html{background:${dark}}}html{color-scheme:light dark}</style>`
+  const injection = `${metas}${apple}${style}`
+  let out = html.includes('</head>')
+    ? html.replace('</head>', `${injection}</head>`)
+    : `${html}${injection}`
+  // iOS notch: without viewport-fit=cover the status-bar area stays white.
+  if (!/viewport-fit\s*=\s*cover/.test(out)) {
+    out = out.replace(
+      /<meta\s+name="viewport"\s+content="([^"]*)"\s*\/?>/,
+      (_, content) => `<meta name="viewport" content="${content}, viewport-fit=cover" />`,
+    )
+  }
+  return out
+}
+
+function currentPreference(ctx) {
+  try {
+    return ctx.get('settings')?.get?.(THEME_SETTINGS_NAMESPACE)?.[THEME_PREFERENCE_FIELD] ?? DEFAULT_PREFERENCE
+  } catch {
+    return DEFAULT_PREFERENCE
+  }
 }
 
 function serveManifest(ctx, tokens, base, icon) {
@@ -62,8 +92,14 @@ function serveManifest(ctx, tokens, base, icon) {
       res.end()
       return
     }
-    const preference = ctx.get('settings')?.get?.(THEME_SETTINGS_NAMESPACE)?.[THEME_PREFERENCE_FIELD] ?? DEFAULT_PREFERENCE
-    const color = preference === 'dark' ? tokens.dark : tokens.light
+    const preference = currentPreference(ctx)
+    // Manifest has no per-scheme colors. Explicit prefs are exact; `system`
+    // honors the Sec-CH-Prefers-Color-Scheme client hint when the browser
+    // sends it, otherwise falls back to light.
+    const hint = req.headers?.['sec-ch-prefers-color-scheme']
+    const color = preference === 'dark' || (preference !== 'light' && preference !== 'dark' && hint === 'dark')
+      ? tokens.dark
+      : tokens.light
     const icons = icon === null
       ? base.icons
       : [{ src: ICON_PATH, sizes: 'any', type: 'image/svg+xml', purpose: 'any' }]
@@ -131,7 +167,7 @@ export function apply(ctx) {
   const base = manifestBase()
   const icon = pwaIconSvg()
   ctx.effect(
-    () => ctx.webServer.tapIndex((html) => injectThemeColorMetas(html, tokens.light, tokens.dark)),
+    () => ctx.webServer.tapIndex((html) => injectThemeColorMetas(html, tokens.light, tokens.dark, currentPreference(ctx))),
     'dsh-webui-fix-pwa: theme-color meta injection',
   )
   ctx.effect(
