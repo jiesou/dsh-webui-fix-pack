@@ -78,6 +78,8 @@ Requires [lehhair/dsh-mobile](https://github.com/lehhair/dsh-mobile).
 
 The original webui cannot insert a newline from a mobile soft keyboard at all; this extension makes Enter insert a newline on mobile soft keyboards.
 
+> Upstream progress: the running primary button already handles tap-to-queue/steer natively — `primaryStops` only turns it into a stop button while the composer is empty (or blocked); with text it is a send button that queues or steers per the `busyEnter` preference, and the icon switches to the send arrow to match. The sendify shim (icon swap + intercepting the click to replay a synthetic Enter) has therefore been dropped; only the soft-keyboard Enter newline is left.
+
 ### mobile-hide-h-scroll
 
 [plugins/dsh-webui-fix-mobile-hide-h-scroll](plugins/dsh-webui-fix-mobile-hide-h-scroll/)

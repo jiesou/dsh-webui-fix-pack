@@ -88,6 +88,8 @@ https://github.com/user-attachments/assets/f322ad94-5ba2-4cda-a10e-51902a9331db
 
 原来的 webui 在移动端完全无法通过软键盘实现换行，这个扩展让移动端软键盘下 Enter 能够换行
 
+> 上游进展：运行中主按钮的「点击即 queue / steering」已由本体实现——`primaryStops` 只在输入框为空（或 blocked）时才变停止键，有文字时按钮本就是发送键，按 `busyEnter` 偏好 queue 或 steer，图标也随之切成发送箭头。因此本插件原来的 sendify（换图标 + 拦 click 回放一个合成 Enter）已删除，只剩软键盘 Enter 换行这一半。
+
 ### mobile-hide-h-scroll
 
 [plugins/dsh-webui-fix-mobile-hide-h-scroll](plugins/dsh-webui-fix-mobile-hide-h-scroll/)
