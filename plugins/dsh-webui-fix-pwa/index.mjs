@@ -74,7 +74,12 @@ function injectThemeColorMetas(html, light, dark, preference) {
       (_, content) => `<meta name="viewport" content="${content}, viewport-fit=cover" />`,
     )
   }
-  return out
+  // Chromium fetches the manifest with credentials omitted unless the link is
+  // credentialed, which would drop the scheme cookie the manifest color needs.
+  return out.replace(
+    /<link\b[^>]*\brel="manifest"[^>]*>/,
+    (tag) => (/\bcrossorigin\b/.test(tag) ? tag : tag.replace(/\s*\/?>$/, (end) => ` crossorigin="use-credentials"${end}`)),
+  )
 }
 
 function currentPreference(ctx) {
@@ -83,6 +88,15 @@ function currentPreference(ctx) {
   } catch {
     return DEFAULT_PREFERENCE
   }
+}
+
+// The browser half reports the scheme it actually resolved (which is the only
+// place `system` is resolvable) back in this cookie.
+function cookieScheme(req) {
+  const header = req.headers?.cookie
+  if (typeof header !== 'string') return null
+  const match = header.match(/(?:^|;\s*)dsh-color-scheme=(light|dark)(?:;|$)/)
+  return match === null ? null : match[1]
 }
 
 function serveManifest(ctx, tokens, base, icon) {
@@ -94,10 +108,10 @@ function serveManifest(ctx, tokens, base, icon) {
     }
     const preference = currentPreference(ctx)
     // Manifest has no per-scheme colors. Explicit prefs are exact; `system`
-    // honors the Sec-CH-Prefers-Color-Scheme client hint when the browser
-    // sends it, otherwise falls back to light.
-    const hint = req.headers?.['sec-ch-prefers-color-scheme']
-    const color = preference === 'dark' || (preference !== 'light' && preference !== 'dark' && hint === 'dark')
+    // resolves through the scheme the browser reported in the cookie, then the
+    // Sec-CH-Prefers-Color-Scheme client hint when it is sent, else light.
+    const reported = cookieScheme(req) ?? req.headers?.['sec-ch-prefers-color-scheme']
+    const color = preference === 'dark' || (preference !== 'light' && reported === 'dark')
       ? tokens.dark
       : tokens.light
     const icons = icon === null

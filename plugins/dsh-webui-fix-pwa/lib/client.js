@@ -9,6 +9,7 @@ window.__ModuleLoader__.load({
         const DARK_TOKEN = '--dsw-static-neutral-bluish-950'
         const FALLBACK_LIGHT = 'rgb(255, 255, 255)'
         const FALLBACK_DARK = 'rgb(21, 21, 23)'
+        const SCHEME_COOKIE = 'dsh-color-scheme'
         scope.effect(() => {
           const meta = document.createElement('meta')
           meta.name = 'theme-color'
@@ -43,6 +44,11 @@ window.__ModuleLoader__.load({
               || (scheme === 'dark' ? FALLBACK_DARK : FALLBACK_LIGHT)
             meta.content = color
             document.documentElement.style.background = color
+            // The manifest cannot carry per-scheme colors, so report the scheme
+            // we resolved here for the host half to bake into the manifest.
+            if (!document.cookie.includes(`${SCHEME_COOKIE}=${scheme}`)) {
+              document.cookie = `${SCHEME_COOKIE}=${scheme}; path=/; max-age=31536000; SameSite=Lax`
+            }
             ensureApple()
             document.head
               .querySelectorAll('meta[name="theme-color"]')
