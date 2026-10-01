@@ -59,12 +59,16 @@ Fullscreen PWA on mobile hides the top status bar and bottom navigation bar; you
 
 https://github.com/user-attachments/assets/433a9dfe-202e-4e25-a784-9bccf6243c2a
 
-Now the PWA is switched to `standalone` instead of `fullscreen`, and the correct colors are injected from the design tokens.
+Now the PWA is switched to `standalone` instead of `fullscreen`, and the manifest gets the colours of the scheme the browser actually resolved.
 
 <img height="400" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
 <img height="300" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
 
 The PWA icon is also generated separately: it no longer blends into a black background.
+
+The iOS half (upstream ships no `apple-mobile-web-app-*` tag and no `viewport-fit=cover`) is covered too: standalone-capable metas plus the notch-safe viewport.
+
+> Upstream progress: the page-side `theme-color` meta is now implemented upstream — `dsh-client-ui-layout`'s `ThemePresenter` owns one `<meta name="theme-color">` and repaints it from the rendered body background on every `theme/change`. This plugin therefore no longer injects a competing meta (which used to delete the upstream one); only the scheme cookie that feeds the manifest remains client-side.
 
 Note: an already installed PWA's `display` will not change with a manifest update — re-add/reinstall it.
 

@@ -71,12 +71,21 @@ dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
 
 https://github.com/user-attachments/assets/433a9dfe-202e-4e25-a784-9bccf6243c2a
 
-现在把 PWA 改为 `standalone` 而不是 `fullscreen` 模式，并按 design token 注入正确的 color
+现在把 PWA 改为 `standalone` 而不是 `fullscreen` 模式，并注入 theme-color/background-color（上游 manifest 不带这两个字段）
 
 <img height="400" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
 <img height="300" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
 
 PWA 图标也单独生成：避免和黑色背景混在一起
+
+iOS 那一半也一并补齐（上游既没有 `apple-mobile-web-app-*`，也没有 `viewport-fit=cover`）：standalone 所需的 meta + 刘海屏安全的 viewport
+
+> 上游进展：页面侧的 `theme-color` meta 已由上游本体实现——`dsh-client-ui-layout` 的 `ThemePresenter` 自己持有唯一一个 `<meta name="theme-color">`，每次 `theme/change` 按渲染后的 body 背景重刷。因此本插件不再注入一个竞争的 meta（它以前会把上游那个摘掉），客户端只剩给 manifest 报 scheme 的 cookie。
+
+`start_url` 不覆盖，沿用上游的 `./`：安装出来的 App 和浏览器标签页是同一个地址，
+能否进入取决于 DSH 的会话 Cookie（快捷方式形态与浏览器共用同一份）。
+
+注意：已安装的 PWA 不会因为 manifest 更新而改变 `display`，需要重新添加／安装。
 
 ### mobile-enter-newline
 
