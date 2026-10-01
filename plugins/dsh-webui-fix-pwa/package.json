@@ -2,7 +2,7 @@
   "name": "@jiesou/dsh-webui-fix-pwa",
   "version": "0.3.5",
   "type": "module",
-  "description": "PWA mode fix for the DSH Web UI: standalone display, manifest colours matching the resolved scheme, and the iOS standalone head tags upstream omits.",
+  "description": "PWA mode fix for the DSH Web UI: a launcher-reachable session cookie, standalone display, manifest colours matching the resolved scheme, and the iOS standalone head tags upstream omits.",
   "license": "MIT",
   "exports": {
     ".": "./index.mjs",

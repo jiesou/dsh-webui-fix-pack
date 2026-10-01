@@ -70,6 +70,10 @@ The iOS half (upstream ships no `apple-mobile-web-app-*` tag and no `viewport-fi
 
 > Upstream progress: the page-side `theme-color` meta is now implemented upstream — `dsh-client-ui-layout`'s `ThemePresenter` owns one `<meta name="theme-color">` and repaints it from the rendered body background on every `theme/change`. This plugin therefore no longer injects a competing meta (which used to delete the upstream one); only the scheme cookie that feeds the manifest remains client-side.
 
+`start_url` is still not overridden and stays upstream's `./`. But the premise that an installed app and the browser share one session cookie is wrong: upstream `dsh-client-connection` mints it as `HttpOnly; SameSite=Strict`, and a cold start from the desktop/app launcher is a top-level navigation Chromium gives an opaque initiator, so the Strict cookie is withheld. That is deliberate — it closes the `intent://` `SameSite=Strict` bypass in crbug 40061152, and upstream has explicitly declined to change it. The installed app therefore never gets a session and only ever sees `dsh web authentication required`; neither reload nor reinstall helps, since a reinstall just repeats the same broken cold start.
+
+So this plugin relaxes the session cookie to `SameSite=Lax`, which still rides a top-level GET navigation — exactly what `start_url` is. The cookie stays `HttpOnly`, still authority-bound, still HMAC-signed, with the same value and lifetime. `/api` does not lean on the cookie's SameSite for CSRF anyway: `isTrustedApiRequest()` keeps its own `Sec-Fetch-Site` and Origin fence.
+
 Note: an already installed PWA's `display` will not change with a manifest update — re-add/reinstall it.
 
 ### mobile-enter-newline

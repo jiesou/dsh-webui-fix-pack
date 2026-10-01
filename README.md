@@ -82,8 +82,15 @@ iOS 那一半也一并补齐（上游既没有 `apple-mobile-web-app-*`，也没
 
 > 上游进展：页面侧的 `theme-color` meta 已由上游本体实现——`dsh-client-ui-layout` 的 `ThemePresenter` 自己持有唯一一个 `<meta name="theme-color">`，每次 `theme/change` 按渲染后的 body 背景重刷。因此本插件不再注入一个竞争的 meta（它以前会把上游那个摘掉），客户端只剩给 manifest 报 scheme 的 cookie。
 
-`start_url` 不覆盖，沿用上游的 `./`：安装出来的 App 和浏览器标签页是同一个地址，
-能否进入取决于 DSH 的会话 Cookie（快捷方式形态与浏览器共用同一份）。
+`start_url` 依旧不覆盖，沿用上游的 `./`。但「装出来的 App 和浏览器共用同一份会话 Cookie」这个前提是错的：
+上游 `dsh-client-connection` 发的会话 Cookie 是 `HttpOnly; SameSite=Strict`，而从桌面／启动器冷启动 PWA 时，
+Chromium 会给这次顶级导航塞一个 opaque initiator，Strict Cookie 因此不发 —— 这是有意为之，为了堵住
+crbug 40061152 那个用 `intent://` 绕过 `SameSite=Strict` 的漏洞，上游明确拒绝改。于是装出来的 App 永远拿不到
+会话，只会看到 `dsh web authentication required`，刷新和重装都没用（重装只是把同一次坏掉的冷启动重演一遍）。
+
+本插件因此把会话 Cookie 的 `SameSite` 放宽为 `Lax`：`Lax` 仍然随顶级 GET 导航发送，而 `start_url` 正是这样一次
+导航。Cookie 仍是 `HttpOnly`、仍按 authority 绑定、仍带 HMAC 签名，值和有效期都没动。`/api` 不靠 Cookie 的
+SameSite 防跨站，`isTrustedApiRequest()` 另有 `Sec-Fetch-Site` 与 Origin 围栏兜底。
 
 注意：已安装的 PWA 不会因为 manifest 更新而改变 `display`，需要重新添加／安装。
 
