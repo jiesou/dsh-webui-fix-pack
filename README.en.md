@@ -59,7 +59,7 @@ Fullscreen PWA on mobile hides the top status bar and bottom navigation bar; you
 
 https://github.com/user-attachments/assets/433a9dfe-202e-4e25-a784-9bccf6243c2a
 
-Now the PWA is switched to `standalone` instead of `fullscreen`, and the manifest gets the colours of the scheme the browser actually resolved.
+Now the PWA is switched to `standalone` instead of `fullscreen`, and the manifest gets a `background-color` for the scheme the browser actually resolved (deliberately no `theme_color` — see the note below).
 
 <img height="400" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
 <img height="300" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
@@ -176,9 +176,9 @@ When there are queued messages, pressing Enter again writes the queued messages 
 
 [plugins/dsh-webui-fix-mobile-keyboard-blur](plugins/dsh-webui-fix-mobile-keyboard-blur/)
 
-On touch (soft-keyboard) devices, entering a session could focus the composer and pop the keyboard unexpectedly.
+On touch (soft-keyboard) devices, entering a session could focus the composer and pop the keyboard unexpectedly. The model picker is covered too: the search field it now renders above the model list focused itself (`searchRef.current?.focus()`) when that pane opened, so a phone popped the soft keyboard up before the user asked for it. Touch devices no longer take that focus either; tapping the field still types, since a real tap focuses it natively without going through the patch.
 
-> This functionality was implemented upstream by the 2026-08-20 commit [`e06625d`](https://github.com/deepseek-ai/deepseek-harness/commit/e06625d202ba53836a16865e0f779a44a85ec167). It is now only needed for older versions that do not include the implementation. It is no longer included in the aggregate pack by default; install `@jiesou/dsh-webui-fix-mobile-keyboard-blur` individually if you still need it.
+> Not implemented upstream: this note previously attributed the fix to the 2026-08-20 commit [`e06625d`](https://github.com/deepseek-ai/deepseek-harness/commit/e06625d202ba53836a16865e0f779a44a85ec167), but that commit is "running drafts switch to Send" (`primaryStops = running && subagent === null && (empty || blocked !== undefined)`) — it only touched `InputBar`'s primary button and has nothing to do with this plugin. On dsh `0.2.0-rc.2`, `InputBar` still calls `focusDraftEditor(editor)` unconditionally from its `useEffect([locked, sessionId, editor])`, so entering a session still focuses the composer and pops the soft keyboard. The plugin therefore stays, and the aggregate pack installs it by default.
 
 ## Dependency strategy
 

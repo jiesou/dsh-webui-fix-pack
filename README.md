@@ -71,7 +71,7 @@ dsh plugin --profile web add @jiesou/dsh-webui-fix-composer-focus-restore
 
 https://github.com/user-attachments/assets/433a9dfe-202e-4e25-a784-9bccf6243c2a
 
-现在把 PWA 改为 `standalone` 而不是 `fullscreen` 模式，并注入 theme-color/background-color（上游 manifest 不带这两个字段）
+现在把 PWA 改为 `standalone` 而不是 `fullscreen` 模式，并注入 `background-color`（上游 manifest 不带这个字段）
 
 <img height="400" src="https://github.com/user-attachments/assets/ae2d5e9b-a774-4818-9b80-8026de07f412" /><img height="400" src="https://github.com/user-attachments/assets/7cbaf353-a184-4520-9782-b14ae4863927" />
 <img height="300" src="https://github.com/user-attachments/assets/7579df75-cca5-474c-8f5c-7c56e6c6ed60" />
@@ -93,6 +93,8 @@ crbug 40061152 那个用 `intent://` 绕过 `SameSite=Strict` 的漏洞，上游
 SameSite 防跨站，`isTrustedApiRequest()` 另有 `Sec-Fetch-Site` 与 Origin 围栏兜底。
 
 注意：已安装的 PWA 不会因为 manifest 更新而改变 `display`，需要重新添加／安装。
+
+manifest **不注入 `theme_color`**，这是刻意的：安装版 PWA 的底部系统导航栏从 Chromium 153 起就按这个字段上色（`WebAppNavigationBarThemeColor`），而 `WebappIntentDataProvider.getColorProvider()` 只有在深色 provider 也有自定义颜色时才会挑它 —— 那个深色伴随字段（`dark_theme_color`）在 blink 的 `manifest.mojom` 里已被标成 obsolete、解析器根本不读，于是深浅两色都会落回同一个 `theme_color`，必然有一种模式反色；再加上这个值在安装/更新那一刻就烘死，就成了「深色里白条、浅色里黑条」那种飘忽的反色。不写 `theme_color` 时 Chromium 把这条栏交回平台默认（跟随系统 night mode）。状态栏不受影响：安装版 Web App 的状态栏由页面侧 `theme-color`（上游 `ThemePresenter`）驱动。已安装的 App 要等 WebAPK 更新或重新添加才会清掉烘死的颜色。
 
 ### mobile-enter-newline
 
@@ -216,7 +218,9 @@ https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 
 修复了这个问题
 
-> 此功能已由 DSH 本体在 2026-08-20 的 commit [`e06625d`](https://github.com/deepseek-ai/deepseek-harness/commit/e06625d202ba53836a16865e0f779a44a85ec167) 中实现。现在仅适用于尚未包含该实现的旧版本，聚合包默认不再包含此插件，旧版本用户可单独安装 `@jiesou/dsh-webui-fix-mobile-keyboard-blur`。
+模型选择也一并按住：模型菜单在「模型」列表上方新加了搜索框，进入列表时会 `searchRef.current?.focus()` 自动聚焦，手机上只是想换个模型，软键盘却先弹出来。触摸设备现在不再抢这个焦点，手点搜索框照旧能打字（原生聚焦不经过本补丁）
+
+> 上游并未实现：此处此前误记为 DSH 本体在 2026-08-20 的 commit [`e06625d`](https://github.com/deepseek-ai/deepseek-harness/commit/e06625d202ba53836a16865e0f779a44a85ec167) 中实现，但那个 commit 是「运行中草稿改用 Send」（`primaryStops = running && subagent === null && (empty || blocked !== undefined)`），只动了 `InputBar` 的主按钮，与本插件无关。本机 dsh `0.2.0-rc.2` 的 `InputBar` 仍在 `useEffect([locked, sessionId, editor])` 里无条件 `focusDraftEditor(editor)`，换 session 依旧自动聚焦、把软键盘弹起来。因此本插件继续保留，聚合包默认安装。
 
 ## 依赖策略
 
