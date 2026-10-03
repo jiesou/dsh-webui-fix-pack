@@ -180,6 +180,16 @@ On touch (soft-keyboard) devices, entering a session could focus the composer an
 
 > Not implemented upstream: this note previously attributed the fix to the 2026-08-20 commit [`e06625d`](https://github.com/deepseek-ai/deepseek-harness/commit/e06625d202ba53836a16865e0f779a44a85ec167), but that commit is "running drafts switch to Send" (`primaryStops = running && subagent === null && (empty || blocked !== undefined)`) — it only touched `InputBar`'s primary button and has nothing to do with this plugin. On dsh `0.2.0-rc.2`, `InputBar` still calls `focusDraftEditor(editor)` unconditionally from its `useEffect([locked, sessionId, editor])`, so entering a session still focuses the composer and pops the soft keyboard. The plugin therefore stays, and the aggregate pack installs it by default.
 
+### ime-multiline-commit
+
+[plugins/dsh-webui-fix-ime-multiline-commit](plugins/dsh-webui-fix-ime-multiline-commit/)
+
+When an input method commits multi-line text in one go (Wayland text-input-v3's `commit_string`, IBus' `CommitText` — fcitx5-vinput, dictation tools), only the first line survives; the rest are dropped.
+
+Blink delivers the whole multi-line string as **one** `beforeinput` (`inputType: "insertText"`, `data: "A\nB\nC"`), and lexical's plain-text insert only takes that over when the caret sits on an empty paragraph. With the caret inside a line that already has text, lexical hands the insert back to the browser; the browser then inserts segment by segment and fires one `input` per segment, so lexical reads its model back from the first segment, re-renders, and wipes the paragraphs still being added.
+
+This plugin takes the multi-line insert over and replays it line by line — one trusted `insertText` per line, a synthetic `insertLineBreak` between lines — exactly what typing each line and pressing Shift+Enter does. Composing text (`insertCompositionText`), paste (`insertFromPaste`) and single-line inserts stay untouched.
+
 ## Dependency strategy
 
 The aggregate pack's `dependencies` always use `latest`; no local path rewriting.

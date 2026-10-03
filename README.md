@@ -222,6 +222,16 @@ https://github.com/user-attachments/assets/55f1ab47-6b16-4946-842c-fcd3ff97143f
 
 > 上游并未实现：此处此前误记为 DSH 本体在 2026-08-20 的 commit [`e06625d`](https://github.com/deepseek-ai/deepseek-harness/commit/e06625d202ba53836a16865e0f779a44a85ec167) 中实现，但那个 commit 是「运行中草稿改用 Send」（`primaryStops = running && subagent === null && (empty || blocked !== undefined)`），只动了 `InputBar` 的主按钮，与本插件无关。本机 dsh `0.2.0-rc.2` 的 `InputBar` 仍在 `useEffect([locked, sessionId, editor])` 里无条件 `focusDraftEditor(editor)`，换 session 依旧自动聚焦、把软键盘弹起来。因此本插件继续保留，聚合包默认安装。
 
+### ime-multiline-commit
+
+[plugins/dsh-webui-fix-ime-multiline-commit](plugins/dsh-webui-fix-ime-multiline-commit/)
+
+输入法一次性提交多行文本时（Wayland text-input-v3 的 `commit_string`、IBus 的 `CommitText`，例如 fcitx5-vinput、听写工具），只有第一行留下来，后面几行全丢
+
+原因是 Blink 把整段多行文本当成**一个** `beforeinput`（`inputType: "insertText"`、`data: "A\nB\nC"`）送进来，而 lexical 的纯文本插入只在光标位于空段落时才接管；光标停在已有文字的段落里时它交还给浏览器逐段插入，浏览器每插一段触发一次 `input`，lexical 从第一段回读重建模型并重渲染，把还在插入的段落冲掉
+
+现在由本插件接管这次多行插入，按行重放：每行一次可信的 `insertText`，行与行之间补一个合成的 `insertLineBreak`，等同于逐行输入再按 Shift+Enter。组合中的文本（`insertCompositionText`）、粘贴（`insertFromPaste`）和单行插入都不动
+
 ## 依赖策略
 
 聚合包 `package.json` 的 `dependencies` 永远写 `latest`，不做本地路径替换
